@@ -1,0 +1,44 @@
+﻿<Window x:Class="EulerianCycleVisualizer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        mc:Ignorable="d"
+        Title="Eulerian Cycle Visualizer" Height="600" Width="800">
+    <Grid>
+        <TabControl>
+            <!-- Tab for adjacency matrix -->
+            <TabItem Header="Matrix">
+                <Grid>
+                    <DataGrid x:Name="MatrixDataGrid" AutoGenerateColumns="False"
+                              Margin="10"
+                              CanUserAddRows="False" CanUserDeleteRows="False">
+                        <DataGrid.Columns>
+                            <!-- Define columns dynamically -->
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button Content="Add Row/Column" Click="AddRowColumn_Click"
+                            HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                            Margin="10" Width="120"/>
+                    <Button Content="Remove Row/Column" Click="RemoveRowColumn_Click"
+                            HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                            Margin="140,10,0,10" Width="150"/>
+                </Grid>
+            </TabItem>
+
+            <!-- Tab for graph visualization -->
+            <TabItem Header="Graph">
+                <Grid>
+                    <oxy:PlotView x:Name="GraphPlot" Margin="10"/>
+                    <Button Content="Run Algorithm" Click="RunAlgorithm_Click"
+                            HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                            Margin="0,0,135,10" Width="120" IsEnabled="False"/>
+                    <Button x:Name="FindEulerianCycleButton" Content="Find Eulerian Cycle" Click="FindEulerianCycle_Click"
+                            HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                            Margin="0,0,10,10" Width="120" IsEnabled="False"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

@@ -30,10 +30,10 @@
             <!-- Tab for graph visualization -->
             <TabItem Header="Graph">
                 <Grid>
-                    <oxy:PlotView x:Name="GraphPlot" Margin="10"/>
+                    <oxy:PlotView x:Name="GraphPlot" Margin="10,10,10,35"/>
                     <Button Content="Run Algorithm" Click="RunAlgorithm_Click"
                             HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                            Margin="0,0,135,10" Width="120" IsEnabled="False"/>
+                            Margin="0,0,135,10" Width="120" IsEnabled="True"/>
                     <Button x:Name="FindEulerianCycleButton" Content="Find Eulerian Cycle" Click="FindEulerianCycle_Click"
                             HorizontalAlignment="Right" VerticalAlignment="Bottom"
                             Margin="0,0,10,10" Width="120" IsEnabled="False"/>

@@ -15,7 +15,6 @@ namespace EulerianCycleVisualizer
         private PlotModel plotModel;
         private List<ScatterPoint> nodes;
         private List<LineSeries> edges;
-        private List<bool> visited;
         private int[,] adjacencyMatrix;
         private const double MarkerSize = 10;
         private const double NodeRadius = 100;
@@ -32,15 +31,13 @@ namespace EulerianCycleVisualizer
         {
             plotModel = new PlotModel { Title = "Эйлеров цикл" };
 
-            // Hide coordinate axes
-            plotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Minimum = 0, Maximum = 1, TickStyle = TickStyle.None });
-            plotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Maximum = 1, TickStyle = TickStyle.None });
+            plotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, IsAxisVisible = false });
+            plotModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, IsAxisVisible = false });
             GraphPlot.Model = plotModel;
         }
 
         private void InitializeMatrix()
         {
-            // Initialize adjacency matrix with default values
             adjacencyMatrix = new int[3, 3];
             UpdateMatrixGrid();
         }
@@ -49,7 +46,6 @@ namespace EulerianCycleVisualizer
         {
             MatrixDataGrid.Columns.Clear();
 
-            // Add column headers
             for (int i = 0; i < adjacencyMatrix.GetLength(0); i++)
             {
                 MatrixDataGrid.Columns.Add(new DataGridTemplateColumn
@@ -59,7 +55,6 @@ namespace EulerianCycleVisualizer
                 });
             }
 
-            // Add row headers
             MatrixDataGrid.RowHeaderWidth = 50;
             MatrixDataGrid.RowHeaderTemplate = CreateRowHeaderTemplate();
 
@@ -101,7 +96,6 @@ namespace EulerianCycleVisualizer
 
         private void AddRowColumn_Click(object sender, RoutedEventArgs e)
         {
-            // Increase matrix size
             int newSize = adjacencyMatrix.GetLength(0) + 1;
             var newMatrix = new int[newSize, newSize];
             for (int i = 0; i < adjacencyMatrix.GetLength(0); i++)
@@ -135,7 +129,6 @@ namespace EulerianCycleVisualizer
 
         private void RunAlgorithm_Click(object sender, RoutedEventArgs e)
         {
-            // Placeholder for algorithm
             plotModel.Series.Clear();
             plotModel.Annotations.Clear();
             DrawGraph();
@@ -159,11 +152,14 @@ namespace EulerianCycleVisualizer
             var vertexPositions = new Dictionary<int, (double X, double Y)>();
             double angleStep = 2 * Math.PI / numVertices;
 
+            double centerX = GraphPlot.ActualWidth / 2;
+            double centerY = GraphPlot.ActualHeight / 2;
+
             for (int i = 0; i < numVertices; i++)
             {
                 double angle = i * angleStep;
-                double x = 300 + NodeRadius * Math.Cos(angle);
-                double y = 300 + NodeRadius * Math.Sin(angle);
+                double x = centerX + NodeRadius * Math.Cos(angle);
+                double y = centerY + NodeRadius * Math.Sin(angle);
                 vertexPositions[i] = (x, y);
                 vertexSeries.Points.Add(new ScatterPoint(x, y));
 
@@ -180,6 +176,7 @@ namespace EulerianCycleVisualizer
 
             plotModel.Series.Add(vertexSeries);
 
+            // Отрисовка рёбер между вершинами
             for (int i = 0; i < numVertices; i++)
             {
                 for (int j = i + 1; j < numVertices; j++)
@@ -193,7 +190,6 @@ namespace EulerianCycleVisualizer
                         };
                         edgeSeries.Points.Add(new DataPoint(vertexPositions[i].X, vertexPositions[i].Y));
                         edgeSeries.Points.Add(new DataPoint(vertexPositions[j].X, vertexPositions[j].Y));
-                        edges.Add(edgeSeries);
                         plotModel.Series.Add(edgeSeries);
                     }
                 }
@@ -206,10 +202,40 @@ namespace EulerianCycleVisualizer
         {
             if (!graphBuilt) return;
 
-            // Placeholder for Eulerian cycle algorithm
-            // Implement the Eulerian cycle finding algorithm here
-            // This is just a placeholder
-            MessageBox.Show("Eulerian cycle algorithm implementation needed.");
+            var cycle = new List<int>();
+            var stack = new Stack<int>();
+            var tempAdjMatrix = new int[adjacencyMatrix.GetLength(0), adjacencyMatrix.GetLength(1)];
+            Array.Copy(adjacencyMatrix, tempAdjMatrix, adjacencyMatrix.Length);
+
+            stack.Push(0);
+
+            while (stack.Count > 0)
+            {
+                int v = stack.Peek();
+                bool hasEdges = false;
+
+                for (int u = 0; u < tempAdjMatrix.GetLength(1); u++)
+                {
+                    if (tempAdjMatrix[v, u] > 0)
+                    {
+                        stack.Push(u);
+                        tempAdjMatrix[v, u] = tempAdjMatrix[u, v] = 0;
+                        hasEdges = true;
+                        break;
+                    }
+                }
+
+                if (!hasEdges)
+                {
+                    cycle.Add(v);
+                    stack.Pop();
+                }
+            }
+
+            foreach (var point in cycle)
+            {
+                MessageBox.Show($"Вершина: {point + 1}");
+            }
         }
     }
 }
